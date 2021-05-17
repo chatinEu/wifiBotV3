@@ -11,7 +11,7 @@
 class MyRobot : public QObject {
     Q_OBJECT
 public:
-    explicit MyRobot(QObject *parent = 0);
+    MyRobot(QObject *parent = 0);
     void doConnect();
     void disConnect();
     QByteArray DataToSend;
@@ -21,6 +21,7 @@ public:
 signals:
     void updateUI(const QByteArray Data);
 public slots:
+    void setForward();
     void connected();
     void disconnected();
     void bytesWritten(qint64 bytes);
