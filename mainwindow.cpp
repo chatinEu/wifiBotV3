@@ -51,3 +51,9 @@ void MainWindow::init()
 {
 
 }
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    robot.updated();
+}
+

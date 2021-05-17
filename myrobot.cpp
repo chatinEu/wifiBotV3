@@ -43,7 +43,8 @@ void MyRobot::doConnect() {
     connect(socket, SIGNAL(readyRead()),this, SLOT(readyRead()));
     qDebug() << "connecting..."; // this is not blocking call
     //socket->connectToHost("LOCALHOST", 15020);
-    socket->connectToHost("192.168.1.106", 15020); // connection to wifibot
+    socket->connectToHost("192.168.1.11", 15020); // connection to wifibot
+
     // we need to wait...
     if(!socket->waitForConnected(5000)) {
         qDebug() << "Error: " << socket->errorString();
@@ -58,21 +59,52 @@ void MyRobot::disConnect() {
     socket->close();
 }
 
+void MyRobot::updated()
+{
+    for (int i =0 ; i<9;i++){
+        std::cout<<DataToSend[i]<<std::endl;
+    }
+}
+
+short MyRobot::getCrc(unsigned char *adresseDataToSend, unsigned char tailleMax)
+{
+    int crc= 0xFFFF;
+    int polynome= 0xA001;
+    int cptOctet = 0;
+    int cptBit= 0;
+    int parity = 0;
+    crc = 0xFFFF;
+
+    polynome = 0xA001;
+    for( cptOctet=0;cptOctet<tailleMax; cptOctet++){
+        crc^= * (adresseDataToSend + cptOctet);
+        for( cptBit = 0; cptBit<=7;cptBit++){
+            parity= crc;
+            crc>>=1;
+            if(parity%2 == true) crc ^=polynome;
+        }
+    }
+    return crc;
+}
+
 void MyRobot::setForward()
 {
     std::cout<<"sa marche"<<std::endl;
-    DataToSend[2] = 120;//left speed
+    DataToSend[2] = 0x78;//left speed
     DataToSend[3] = 0x0;//left speed
-    DataToSend[4] = 120;//right speed
+    DataToSend[4] = 0x78;//right speed
     DataToSend[5] = 0x0;//right speed
-    DataToSend[6] = 80;
+    DataToSend[6] = 0x80;
+
+
+    short crc=getCrc(*DataToSend,9);
     DataToSend[7] = 0x0;//CRC
     DataToSend[8] = 0x0;//CRC
+    updated();
 }
 
 void MyRobot::connected() {
     qDebug() << "connected..."; // Hey server, tell me about you.
-    std::cout<<"sa marche"<<std::endl;
 }
 
 void MyRobot::disconnected() {
