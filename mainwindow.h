@@ -16,15 +16,19 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     void init();
-    void connect();
+    void connectToRobot();
 
 private slots:
     void on_pushButton_clicked();
 
     void on_pushButton_2_clicked();
 
+    void on_pushButton_6_clicked();
+
 private:
     Ui::MainWindow *ui;
-    MyRobot robot = MyRobot();
+    MyRobot robot ;
+public slots:
+    void connectionLabelSlot();
 };
 #endif // MAINWINDOW_H

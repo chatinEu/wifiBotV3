@@ -12,7 +12,7 @@ MyRobot::MyRobot(QObject *parent) : QObject(parent) {
     DataToSend[4] = 0x0;//right speed
     DataToSend[5] = 0x0;//right speed
 
-    DataToSend[6] = 0x0;
+    DataToSend[6] = 0x00;
     /*
      * bit 0 = relay sensor pin 3
      * bit 0 = relay sensor pin 4 et 5
@@ -66,7 +66,7 @@ void MyRobot::updated()
     }
 }
 
-short MyRobot::getCrc(unsigned char *adresseDataToSend, unsigned char tailleMax)
+short MyRobot::generateCrc(unsigned char *adresseDataToSend, unsigned char tailleMax)
 {
     int crc= 0xFFFF;
     int polynome= 0xA001;
@@ -84,23 +84,30 @@ short MyRobot::getCrc(unsigned char *adresseDataToSend, unsigned char tailleMax)
             if(parity%2 == true) crc ^=polynome;
         }
     }
+
+    std::cout<<"crc is: "<<crc<<std::endl;
     return crc;
+}
+
+QTcpSocket *MyRobot::getSocket()
+{
+    return socket;
 }
 
 void MyRobot::setForward()
 {
-    std::cout<<"sa marche"<<std::endl;
-    DataToSend[2] = 0x78;//left speed
-    DataToSend[3] = 0x0;//left speed
-    DataToSend[4] = 0x78;//right speed
-    DataToSend[5] = 0x0;//right speed
-    DataToSend[6] = 0x80;
-
-
-    short crc=getCrc(*DataToSend,9);
-    DataToSend[7] = 0x0;//CRC
-    DataToSend[8] = 0x0;//CRC
+    DataToSend[2] = 0xFF;       //left speed
+    DataToSend[3] = 0x00;       //left speed
+    DataToSend[4] = 0xFF;       //right speed
+    DataToSend[5] = 0x00;       //right speed
+    DataToSend[6] = 0x40;
     updated();
+
+    //crc not used in tcp ? probs true
+    /*
+    short crc = generateCrc((unsigned char*)DataToSend.constData(), 9);
+    DataToSend[7] = (unsigned)crc;
+    DataToSend[8] = (unsigned)(crc >> 8);*/
 }
 
 void MyRobot::connected() {

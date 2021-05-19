@@ -18,7 +18,8 @@ public:
     QByteArray DataReceived;
     QMutex Mutex;
     void updated();
-    short getCrc(unsigned char *adresseDataToSend,unsigned char tailleMax);
+    short generateCrc(unsigned char *adresseDataToSend,unsigned char tailleMax);
+    QTcpSocket* getSocket();
 
 signals:
     void updateUI(const QByteArray Data);
