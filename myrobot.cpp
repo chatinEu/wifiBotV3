@@ -3,9 +3,13 @@
 #include "myrobot.h"
 #include <iostream>
 
+
 MyRobot::MyRobot(QObject *parent) : QObject(parent) {
+
+
+
     DataToSend.resize(9);
-    DataToSend[0] = 0xFF;
+    DataToSend[0] = 0xff;
     DataToSend[1] = 0x07;
     DataToSend[2] = 0x0;//left speed
     DataToSend[3] = 0x0;//left speed
@@ -38,6 +42,8 @@ MyRobot::MyRobot(QObject *parent) : QObject(parent) {
 void MyRobot::doConnect() {
     socket = new QTcpSocket(this); // socket creation
     connect(socket, SIGNAL(connected()),this, SLOT(connected()));
+    //connect(socket, SIGNAL(connected()),this, MainWindow::SLOT(connectionLabelSlot()));
+
     connect(socket, SIGNAL(disconnected()),this, SLOT(disconnected()));
     connect(socket, SIGNAL(bytesWritten(qint64)),this, SLOT(bytesWritten(qint64)));
     connect(socket, SIGNAL(readyRead()),this, SLOT(readyRead()));
@@ -62,31 +68,52 @@ void MyRobot::disConnect() {
 void MyRobot::updated()
 {
     for (int i =0 ; i<9;i++){
-        std::cout<<DataToSend[i]<<std::endl;
+        std::cout<<std::hex <<DataToSend[i]<<std::endl;
     }
+
+    /*for(int i=0; i<20;i++){
+        std::cout<< std::hex << DataReceived[i]<<std::endl;
+    }*/
 }
 
 short MyRobot::generateCrc(unsigned char *adresseDataToSend, unsigned char tailleMax)
-{
+{int crc = 0xFFFF;
+    int polynome = 0xA001;
+    int cptOctet = 0;
+    int cptBit = 0;
+    int parity = 0;
+
+    for (cptOctet = 0; cptOctet < tailleMax ; cptOctet++)
+      {
+        crc ^= *(adresseDataToSend + cptOctet);
+
+        for (cptBit = 0; cptBit <= 7 ; cptBit++)
+    {
+      parity = crc;
+      crc >>= 1;
+      if (parity % 2 == true) crc ^= polynome;
+    }
+      }
+
+    /*
     int crc= 0xFFFF;
     int polynome= 0xA001;
     int cptOctet = 0;
     int cptBit= 0;
     int parity = 0;
-    crc = 0xFFFF;
 
-    polynome = 0xA001;
-    for( cptOctet=0;cptOctet<tailleMax; cptOctet++){
+
+    for( cptOctet=0; cptOctet<tailleMax; cptOctet++){
         crc^= * (adresseDataToSend + cptOctet);
-        for( cptBit = 0; cptBit<=7;cptBit++){
+        for( cptBit = 0; cptBit<=7; cptBit++){
             parity= crc;
             crc>>=1;
             if(parity%2 == true) crc ^=polynome;
         }
     }
-
+*/
     std::cout<<"crc is: "<<crc<<std::endl;
-    return crc;
+    return (crc);
 }
 
 QTcpSocket *MyRobot::getSocket()
@@ -96,22 +123,26 @@ QTcpSocket *MyRobot::getSocket()
 
 void MyRobot::setForward()
 {
-    DataToSend[2] = 0xFF;       //left speed
-    DataToSend[3] = 0x00;       //left speed
-    DataToSend[4] = 0xFF;       //right speed
-    DataToSend[5] = 0x00;       //right speed
-    DataToSend[6] = 0x40;
-    updated();
+    DataToSend[2] = (unsigned char)110;//0x78;       //left speed
+    DataToSend[3] = (unsigned char)110;        //left speed
+    DataToSend[4] = (unsigned char)110;//0x78;       //right speed
+    DataToSend[5] = (unsigned char)110;       //right speed
+    DataToSend[6] = (unsigned char)80;//0xf0;
+
+
+
+
 
     //crc not used in tcp ? probs true
-    /*
-    short crc = generateCrc((unsigned char*)DataToSend.constData(), 9);
-    DataToSend[7] = (unsigned)crc;
-    DataToSend[8] = (unsigned)(crc >> 8);*/
+
+    short crc = generateCrc((unsigned char*)DataToSend.data()+1, 6);
+    DataToSend[7] = (unsigned char)(crc >> 0);
+    DataToSend[8] = (unsigned char)(crc >> 8);
 }
 
 void MyRobot::connected() {
     qDebug() << "connected..."; // Hey server, tell me about you.
+
 }
 
 void MyRobot::disconnected() {
@@ -119,6 +150,7 @@ void MyRobot::disconnected() {
 }
 
 void MyRobot::bytesWritten(qint64 bytes) {
+    updated();
     qDebug() << bytes << " bytes written...";
 }
 
