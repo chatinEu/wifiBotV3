@@ -36,5 +36,6 @@ private:
     MyRobot robot ;
 public slots:
     void connectionLabelSlot();
+    void updateGUI(QByteArray);
 };
 #endif // MAINWINDOW_H

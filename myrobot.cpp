@@ -2,9 +2,10 @@
 
 #include "myrobot.h"
 #include <iostream>
-
+#include <mainwindow.h>
 
 MyRobot::MyRobot(QObject *parent) : QObject(parent) {
+
 
 
 
@@ -42,7 +43,6 @@ MyRobot::MyRobot(QObject *parent) : QObject(parent) {
 void MyRobot::doConnect() {
     socket = new QTcpSocket(this); // socket creation
     connect(socket, SIGNAL(connected()),this, SLOT(connected()));
-    //connect(socket, SIGNAL(connected()),this, MainWindow::SLOT(connectionLabelSlot()));
 
     connect(socket, SIGNAL(disconnected()),this, SLOT(disconnected()));
     connect(socket, SIGNAL(bytesWritten(qint64)),this, SLOT(bytesWritten(qint64)));
@@ -103,8 +103,34 @@ QTcpSocket *MyRobot::getSocket()
     return socket;
 }
 
+
+
+
+
+float MyRobot::getBatteryPercent()
+{
+    unsigned char adc1=DataReceived[2];
+    unsigned char adc2=DataReceived[4];
+    unsigned char adc3=DataReceived[3];
+    adc1<<adc1;
+    adc2<<adc2;
+    adc3<<adc3;
+
+    unsigned char  adc=adc1+adc2+adc3;
+
+    qDebug() <<"battery  level= "<<adc1;
+    qDebug() <<"battery  level= "<<adc2;
+    qDebug() <<"battery  level= "<<adc3;
+
+    qDebug() <<"battery  level= "<<adc;
+
+
+    return adc/255*100;
+}
+
 void MyRobot::setForward(int speed)
 {
+    //TODO: set  loopback
     setWheelSpeed( speed);
     DataToSend[6] = (unsigned char)80;      //0xf0;
     updateCrc();
@@ -117,9 +143,6 @@ void MyRobot::setReverse(int speed)
     DataToSend[6] = (unsigned char)0;
     updateCrc();
 }
-
-
-
 
 void MyRobot::setLeft(int speed)
 {
@@ -150,6 +173,7 @@ void MyRobot::setRight(int speed)
 void MyRobot::connected() {
     qDebug() << "connected..."; // Hey server, tell me about you.
 
+
 }
 
 void MyRobot::disconnected() {
@@ -164,6 +188,7 @@ void MyRobot::bytesWritten(qint64 bytes) {
 void MyRobot::readyRead() {
     qDebug() << "reading..."; // read the data from the socket
     DataReceived = socket->readAll();
+    parseReceivedData();
     emit updateUI(DataReceived);
     qDebug() << DataReceived[0] << DataReceived[1] << DataReceived[2];
 }
@@ -190,4 +215,11 @@ void MyRobot::setWheelSpeed(int speed)
     DataToSend[4] = (unsigned char)speed;   //0x78; //right speed
     DataToSend[5] = (unsigned char)speed;           //right speed
 }
+
+void MyRobot::parseReceivedData()
+{
+    getBatteryPercent();
+
+}
+
 

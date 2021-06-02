@@ -14,10 +14,16 @@ MainWindow::MainWindow(QWidget *parent)
 void MainWindow::init()
 {
     //robot pas crée car appel dans le constructeur
-    QTcpSocket* socket=robot.getSocket();
-    connect(socket, SIGNAL(connected()),this, SLOT(connectionLabelSlot()));
+    //QTcpSocket* socket=robot.getSocket();
+    //connect(socket,SIGNAL(connected()),this, SLOT(connectionLabelSlot()));
+
+    QObject::connect(&robot,SIGNAL(updateUI(QByteArray)),this,SLOT(updateGUI(QByteArray)));
 }
 
+void MainWindow::updateGUI(QByteArray arr)
+{
+    std::cout<< "updating ::;;;!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"<<std::endl;
+}
 void MainWindow::on_BtnForward_clicked(){
     robot.setForward(110);
 }
@@ -80,12 +86,6 @@ MainWindow::~MainWindow()
 
 
 
-void MainWindow::on_pushButton_2_clicked()
-{
-    robot.updated();
-}
-
-
 void MainWindow::on_pushButton_6_clicked()
 {
     this->connectToRobot();
@@ -96,5 +96,8 @@ void MainWindow::connectionLabelSlot()
     std::cout<<"connected";
     this->ui->label->setText("ONLINE");
 }
+
+
+
 
 

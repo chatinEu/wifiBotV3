@@ -20,6 +20,7 @@ public:
     void updated();
     short generateCrc(unsigned char *adresseDataToSend,unsigned char tailleMax);
     QTcpSocket* getSocket();
+    float getBatteryPercent();
 
 
 
@@ -41,6 +42,9 @@ private:
     QTimer *TimerEnvoi;
     void updateCrc();
     void setWheelSpeed(int speed);
+    void parseReceivedData(); //useless for now
+    unsigned char bitwiseAddition(unsigned char c1,unsigned char c2);
+
 };
 
 #endif // MYROBOT_H
