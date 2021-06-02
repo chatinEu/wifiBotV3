@@ -38,7 +38,7 @@
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QPushButton" name="pushButton_4">
+      <widget class="QPushButton" name="BtnLeft">
        <property name="text">
         <string>PushButton</string>
        </property>
@@ -47,7 +47,7 @@
      <item>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <widget class="QPushButton" name="pushButton">
+        <widget class="QPushButton" name="BtnForward">
          <property name="text">
           <string>forward</string>
          </property>
@@ -67,7 +67,7 @@
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_3">
+        <widget class="QPushButton" name="BtnReverse">
          <property name="text">
           <string>PushButton</string>
          </property>
@@ -76,7 +76,7 @@
       </layout>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_5">
+      <widget class="QPushButton" name="BtnRight">
        <property name="text">
         <string>PushButton</string>
        </property>

@@ -84,34 +84,16 @@ short MyRobot::generateCrc(unsigned char *adresseDataToSend, unsigned char taill
     int parity = 0;
 
     for (cptOctet = 0; cptOctet < tailleMax ; cptOctet++)
-      {
+    {
         crc ^= *(adresseDataToSend + cptOctet);
 
         for (cptBit = 0; cptBit <= 7 ; cptBit++)
-    {
-      parity = crc;
-      crc >>= 1;
-      if (parity % 2 == true) crc ^= polynome;
-    }
-      }
-
-    /*
-    int crc= 0xFFFF;
-    int polynome= 0xA001;
-    int cptOctet = 0;
-    int cptBit= 0;
-    int parity = 0;
-
-
-    for( cptOctet=0; cptOctet<tailleMax; cptOctet++){
-        crc^= * (adresseDataToSend + cptOctet);
-        for( cptBit = 0; cptBit<=7; cptBit++){
-            parity= crc;
-            crc>>=1;
-            if(parity%2 == true) crc ^=polynome;
+        {
+          parity = crc;
+          crc >>= 1;
+          if (parity % 2 == true) crc ^= polynome;
         }
     }
-*/
     std::cout<<"crc is: "<<crc<<std::endl;
     return (crc);
 }
@@ -121,24 +103,49 @@ QTcpSocket *MyRobot::getSocket()
     return socket;
 }
 
-void MyRobot::setForward()
+void MyRobot::setForward(int speed)
 {
-    DataToSend[2] = (unsigned char)110;//0x78;       //left speed
-    DataToSend[3] = (unsigned char)110;        //left speed
-    DataToSend[4] = (unsigned char)110;//0x78;       //right speed
-    DataToSend[5] = (unsigned char)110;       //right speed
-    DataToSend[6] = (unsigned char)80;//0xf0;
+    setWheelSpeed( speed);
+    DataToSend[6] = (unsigned char)80;      //0xf0;
+    updateCrc();
 
-
-
-
-
-    //crc not used in tcp ? probs true
-
-    short crc = generateCrc((unsigned char*)DataToSend.data()+1, 6);
-    DataToSend[7] = (unsigned char)(crc >> 0);
-    DataToSend[8] = (unsigned char)(crc >> 8);
 }
+
+void MyRobot::setReverse(int speed)
+{
+    setWheelSpeed( speed);
+    DataToSend[6] = (unsigned char)0;
+    updateCrc();
+}
+
+
+
+
+void MyRobot::setLeft(int speed)
+{
+    // TODO: char 6
+    setWheelSpeed( speed);
+    DataToSend[6] = (unsigned char)0;
+    updateCrc();
+}
+
+void MyRobot::setRight(int speed)
+{
+    // TODO: char 6
+    setWheelSpeed( speed);
+    DataToSend[6] = (unsigned char)0;
+    updateCrc();
+}
+
+
+
+
+
+
+
+
+
+
 
 void MyRobot::connected() {
     qDebug() << "connected..."; // Hey server, tell me about you.
@@ -166,5 +173,21 @@ void MyRobot::MyTimerSlot() {
     while(Mutex.tryLock());
     socket->write(DataToSend);
     Mutex.unlock();
+}
+
+void MyRobot::updateCrc()
+{
+    short crc = generateCrc((unsigned char*)DataToSend.data()+1, 6);
+    DataToSend[7] = (unsigned char)(crc >> 0);
+    DataToSend[8] = (unsigned char)(crc >> 8);
+}
+
+void MyRobot::setWheelSpeed(int speed)
+{
+
+    DataToSend[2] = (unsigned char)speed;   //0x78; //left speed
+    DataToSend[3] = (unsigned char)speed;           //left speed
+    DataToSend[4] = (unsigned char)speed;   //0x78; //right speed
+    DataToSend[5] = (unsigned char)speed;           //right speed
 }
 

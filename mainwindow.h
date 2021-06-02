@@ -19,11 +19,17 @@ public:
     void connectToRobot();
 
 private slots:
-    void on_pushButton_clicked();
 
-    void on_pushButton_2_clicked();
 
     void on_pushButton_6_clicked();
+
+    void on_BtnForward_clicked();
+
+    void on_BtnLeft_clicked();
+
+    void on_BtnReverse_clicked();
+
+    void on_BtnRight_clicked();
 
 private:
     Ui::MainWindow *ui;

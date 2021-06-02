@@ -18,9 +18,37 @@ void MainWindow::init()
     connect(socket, SIGNAL(connected()),this, SLOT(connectionLabelSlot()));
 }
 
-void MainWindow::on_pushButton_clicked(){
-    robot.setForward();
+void MainWindow::on_BtnForward_clicked(){
+    robot.setForward(110);
 }
+
+void MainWindow::on_BtnReverse_clicked()
+{
+    robot.setReverse(110);
+}
+
+
+void MainWindow::on_BtnRight_clicked()
+{
+    robot.setRight(110);
+}
+
+
+
+void MainWindow::on_BtnLeft_clicked()
+{
+    robot.setLeft(110);
+}
+
+
+
+
+
+
+
+
+
+
 
 void MainWindow::connectToRobot(){
     robot.doConnect();
@@ -68,4 +96,5 @@ void MainWindow::connectionLabelSlot()
     std::cout<<"connected";
     this->ui->label->setText("ONLINE");
 }
+
 

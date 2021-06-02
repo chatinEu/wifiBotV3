@@ -21,10 +21,15 @@ public:
     short generateCrc(unsigned char *adresseDataToSend,unsigned char tailleMax);
     QTcpSocket* getSocket();
 
+
+
 signals:
     void updateUI(const QByteArray Data);
 public slots:
-    void setForward();
+    void setForward(int speed);
+    void setReverse(int speed);
+    void setLeft(int speed);
+    void setRight(int speed);
     void connected();
     void disconnected();
     void bytesWritten(qint64 bytes);
@@ -34,6 +39,8 @@ public slots:
 private:
     QTcpSocket *socket;
     QTimer *TimerEnvoi;
+    void updateCrc();
+    void setWheelSpeed(int speed);
 };
 
 #endif // MYROBOT_H
