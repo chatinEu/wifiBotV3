@@ -18,15 +18,16 @@ public:
     QByteArray DataReceived;
     QMutex Mutex;
     void updated();
-    short generateCrc(unsigned char *adresseDataToSend,unsigned char tailleMax);
+//    short generateCrc(unsigned char *adresseDataToSend,unsigned char tailleMax);
+    short Crc16(unsigned char *_Adresse_tab, unsigned char Taille_Max);
     QTcpSocket* getSocket();
 
 signals:
     void updateUI(const QByteArray Data);
 public slots:
-    void setForward();
     void connected();
     void disconnected();
+    void setForward();
     void bytesWritten(qint64 bytes);
     void readyRead();
     void MyTimerSlot();

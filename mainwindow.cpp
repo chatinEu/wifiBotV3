@@ -18,32 +18,19 @@ void MainWindow::init()
     connect(socket, SIGNAL(robot.connected()),this, SLOT(connectionLabelSlot));
 }
 
+void MainWindow::connectToRobot(){
+    robot.doConnect();
+}
+
 void MainWindow::on_pushButton_clicked()
 {
     robot.setForward();
 }
 
-void MainWindow::connectToRobot(){
-    robot.doConnect();
-}
-
-
 
 void setMainWindow(){
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 MainWindow::~MainWindow()

@@ -17,9 +17,10 @@ public:
     ~MainWindow();
     void init();
     void connectToRobot();
+    void on_pushButton_clicked();
+    MyRobot robot ;
 
 private slots:
-    void on_pushButton_clicked();
 
     void on_pushButton_2_clicked();
 
@@ -27,7 +28,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    MyRobot robot ;
+
 public slots:
     void connectionLabelSlot();
 };
