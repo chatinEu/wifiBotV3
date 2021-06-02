@@ -16,8 +16,15 @@ MyRobot::MyRobot(QObject *parent) : QObject(parent) {
     DataToSend[3] = 0x0;//left speed
     DataToSend[4] = 0x0;//right speed
     DataToSend[5] = 0x0;//right speed
+    DataToSend[6] = 0x0;
+    DataToSend[7] = 0x0;//CRC
+    DataToSend[8] = 0x0;//CRC
+    DataReceived.resize(21);
+    TimerEnvoi = new QTimer();
+    updated();
+    // setup signal and slot
+    connect(TimerEnvoi, SIGNAL(timeout()), this, SLOT(MyTimerSlot())); //Send data to wifibot timer
 
-    DataToSend[6] = 0x00;
     /*
      * bit 0 = relay sensor pin 3
      * bit 0 = relay sensor pin 4 et 5
@@ -28,15 +35,9 @@ MyRobot::MyRobot(QObject *parent) : QObject(parent) {
      * bit 6 = left side 1 forward 0 reverse
      * bit 7
      */
-
-
-    DataToSend[7] = 0x0;//CRC
-    DataToSend[8] = 0x0;//CRC
-    DataReceived.resize(21);
-    TimerEnvoi = new QTimer();
-    // setup signal and slot
-    connect(TimerEnvoi, SIGNAL(timeout()), this, SLOT(MyTimerSlot())); //Send data to wifibot timer
 }
+
+
 
 
 
@@ -76,32 +77,34 @@ void MyRobot::updated()
     }*/
 }
 
-short MyRobot::generateCrc(unsigned char *adresseDataToSend, unsigned char tailleMax)
-{int crc = 0xFFFF;
-    int polynome = 0xA001;
-    int cptOctet = 0;
-    int cptBit = 0;
-    int parity = 0;
 
-    for (cptOctet = 0; cptOctet < tailleMax ; cptOctet++)
-    {
-        crc ^= *(adresseDataToSend + cptOctet);
 
-        for (cptBit = 0; cptBit <= 7 ; cptBit++)
-        {
-          parity = crc;
-          crc >>= 1;
-          if (parity % 2 == true) crc ^= polynome;
+short MyRobot::Crc16(unsigned char *_Adresse_tab, unsigned char Taille_Max){
+    unsigned int Crc = 0xFFFF;
+    unsigned int Polynome = 0xA001;
+    unsigned int CptOctet = 0;
+    unsigned int CptBit = 0;
+    unsigned int Parity = 0;
+
+    Crc = 0xFFFF;
+    Polynome = 0xA001;
+    for (CptOctet=0; CptOctet<Taille_Max;CptOctet++){
+        Crc ^= *(_Adresse_tab + CptOctet);
+
+        for(CptBit=0;CptBit<=7;CptBit++){
+            Parity = Crc;
+            Crc >>=1;
+            if(Parity%2 == true) Crc ^= Polynome;
         }
     }
-    std::cout<<"crc is: "<<crc<<std::endl;
-    return (crc);
+    return (Crc);
 }
 
 QTcpSocket *MyRobot::getSocket()
 {
     return socket;
 }
+
 
 
 
@@ -169,6 +172,25 @@ void MyRobot::setRight(int speed)
 
 
 
+void MyRobot::setForward(){
+    short speed1 = 120;
+    short speed2 = 120;
+    DataToSend.resize(9);
+    DataToSend[0] = 0xFF;
+    DataToSend[1] = 0x07;
+    DataToSend[2] = (unsigned char) speed1;
+    DataToSend[3] = (unsigned char)(speed1 >> 8);
+    DataToSend[4] = (unsigned char) speed2;
+    DataToSend[5] = (unsigned char)(speed2 >> 8);
+    DataToSend[6] = (unsigned char)(80);
+    short mycrcsend = Crc16((unsigned char *)DataToSend.data()+1,6);
+    DataToSend[7] = (unsigned char) mycrcsend;
+    DataToSend[8] = (unsigned char) (mycrcsend >> 8);
+
+    connect(TimerEnvoi, SIGNAL(timeout()), this, SLOT(MyTimerSlot()));
+    updated();
+}
+
 
 void MyRobot::connected() {
     qDebug() << "connected..."; // Hey server, tell me about you.
@@ -202,7 +224,7 @@ void MyRobot::MyTimerSlot() {
 
 void MyRobot::updateCrc()
 {
-    short crc = generateCrc((unsigned char*)DataToSend.data()+1, 6);
+    short crc = Crc16((unsigned char *)DataToSend.data()+1,6);
     DataToSend[7] = (unsigned char)(crc >> 0);
     DataToSend[8] = (unsigned char)(crc >> 8);
 }
@@ -219,7 +241,6 @@ void MyRobot::setWheelSpeed(int speed)
 void MyRobot::parseReceivedData()
 {
     getBatteryPercent();
-
 }
 
 

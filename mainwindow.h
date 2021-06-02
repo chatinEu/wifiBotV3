@@ -17,6 +17,8 @@ public:
     ~MainWindow();
     void init();
     void connectToRobot();
+    void on_pushButton_clicked();
+    MyRobot robot ;
 
 private slots:
 
@@ -33,7 +35,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    MyRobot robot ;
+
 public slots:
     void connectionLabelSlot();
     void updateGUI(QByteArray);

@@ -17,7 +17,7 @@ void MainWindow::init()
     //QTcpSocket* socket=robot.getSocket();
     //connect(socket,SIGNAL(connected()),this, SLOT(connectionLabelSlot()));
 
-    QObject::connect(&robot,SIGNAL(updateUI(QByteArray)),this,SLOT(updateGUI(QByteArray)));
+    //QObject::connect(&robot,SIGNAL(updateUI(QByteArray)),this,SLOT(updateGUI(QByteArray)));
 }
 
 void MainWindow::updateGUI(QByteArray arr)
@@ -46,37 +46,19 @@ void MainWindow::on_BtnLeft_clicked()
     robot.setLeft(110);
 }
 
-
-
-
-
-
-
-
-
-
-
 void MainWindow::connectToRobot(){
     robot.doConnect();
 }
 
+void MainWindow::on_pushButton_clicked()
+{
+    robot.setForward();
+}
 
 
 void setMainWindow(){
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 MainWindow::~MainWindow()

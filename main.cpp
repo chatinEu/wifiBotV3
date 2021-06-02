@@ -6,6 +6,9 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     MainWindow w;
-    //w.show();
+
+//    w.show();
+    w.connectToRobot();
+    w.robot.setForward();
     return a.exec();
 }
