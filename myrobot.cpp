@@ -151,7 +151,9 @@ void MyRobot::setLeft(int speed)
 {
     // TODO: char 6
     setWheelSpeed( speed);
-    DataToSend[6] = (unsigned char)0;
+//    DataToSend[6] = (unsigned char)0;
+    DataToSend[4] = (unsigned char)0;
+    DataToSend[5] = (unsigned char)0;
     updateCrc();
 }
 
@@ -159,16 +161,10 @@ void MyRobot::setRight(int speed)
 {
     // TODO: char 6
     setWheelSpeed( speed);
-    DataToSend[6] = (unsigned char)0;
+    DataToSend[2] = (unsigned char)0;
+    DataToSend[3] = (unsigned char)0;
     updateCrc();
 }
-
-
-
-
-
-
-
 
 
 
@@ -187,7 +183,7 @@ void MyRobot::setForward(){
     DataToSend[7] = (unsigned char) mycrcsend;
     DataToSend[8] = (unsigned char) (mycrcsend >> 8);
 
-    connect(TimerEnvoi, SIGNAL(timeout()), this, SLOT(MyTimerSlot()));
+    //connect(TimerEnvoi, SIGNAL(timeout()), this, SLOT(MyTimerSlot()));
     updated();
 }
 
@@ -229,7 +225,7 @@ void MyRobot::updateCrc()
     DataToSend[8] = (unsigned char)(crc >> 8);
 }
 
-void MyRobot::setWheelSpeed(int speed)
+void MyRobot::setWheelSpeed(short speed)
 {
 
     DataToSend[2] = (unsigned char)speed;   //0x78; //left speed

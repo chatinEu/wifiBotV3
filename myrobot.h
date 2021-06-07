@@ -43,7 +43,7 @@ private:
     QTcpSocket *socket;
     QTimer *TimerEnvoi;
     void updateCrc();
-    void setWheelSpeed(int speed);
+    void setWheelSpeed(short speed);
     void parseReceivedData(); //useless for now
     unsigned char bitwiseAddition(unsigned char c1,unsigned char c2);
 
