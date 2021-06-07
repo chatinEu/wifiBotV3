@@ -18,7 +18,7 @@ public:
     void init();
     void connectToRobot();
     void on_pushButton_clicked();
-    MyRobot robot ;
+    MyRobot robot= MyRobot() ;
 
 private slots:
 
@@ -32,6 +32,8 @@ private slots:
     void on_BtnReverse_clicked();
 
     void on_BtnRight_clicked();
+
+    void on_BtnStop_clicked();
 
 private:
     Ui::MainWindow *ui;

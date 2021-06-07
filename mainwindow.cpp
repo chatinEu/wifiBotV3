@@ -6,7 +6,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-    MyRobot robot= new MyRobot(this);
+    //this->robot = new MyRobot(this);
     ui->setupUi(this);
     //this->connectToRobot();
 }
@@ -24,8 +24,16 @@ void MainWindow::updateGUI(QByteArray arr)
 {
     std::cout<< "updating ::;;;!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"<<std::endl;
 }
+
+
+
+
+void MainWindow::on_BtnStop_clicked()
+{
+    robot.setForward(0);
+}
 void MainWindow::on_BtnForward_clicked(){
-    robot.setForward(110);
+    robot.setForward(10);
 }
 
 void MainWindow::on_BtnReverse_clicked()
@@ -78,6 +86,7 @@ void MainWindow::connectionLabelSlot()
     std::cout<<"connected";
     this->ui->label->setText("ONLINE");
 }
+
 
 
 
