@@ -22,6 +22,7 @@ public:
     short Crc16(unsigned char *_Adresse_tab, unsigned char Taille_Max);
     QTcpSocket* getSocket();
     float getBatteryPercent();
+    float getBatteryLevel();
 
 
 
@@ -34,7 +35,7 @@ public slots:
     void setRight(int speed);
     void connected();
     void disconnected();
-    void setForward();
+
     void bytesWritten(qint64 bytes);
     void readyRead();
     void MyTimerSlot();
@@ -47,6 +48,7 @@ private:
     void setWheelSpeed(short lSpeed,short rSpeed);
     void parseReceivedData(); //useless for now
     unsigned char bitwiseAddition(unsigned char c1,unsigned char c2);
+    float batteryLevel;
 
 };
 

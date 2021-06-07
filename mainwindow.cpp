@@ -14,15 +14,17 @@ MainWindow::MainWindow(QWidget *parent)
 void MainWindow::init()
 {
     //robot pas crée car appel dans le constructeur
-    //QTcpSocket* socket=robot.getSocket();
+    QTcpSocket* socket=robot.getSocket();
     //connect(socket,SIGNAL(connected()),this, SLOT(connectionLabelSlot()));
 
-    //QObject::connect(&robot,SIGNAL(updateUI(QByteArray)),this,SLOT(updateGUI(QByteArray)));
+    connect(&robot,SIGNAL(updateUI(QByteArray)),this,SLOT(updateGUI(QByteArray)));
+    ui->progressBar->setRange(0,100);
 }
 
 void MainWindow::updateGUI(QByteArray arr)
 {
     std::cout<< "updating ::;;;!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"<<std::endl;
+    ui->progressBar->setValue(robot.getBatteryLevel());
 }
 
 
@@ -56,11 +58,6 @@ void MainWindow::on_BtnLeft_clicked()
 
 void MainWindow::connectToRobot(){
     robot.doConnect();
-}
-
-void MainWindow::on_pushButton_clicked()
-{
-    robot.setForward();
 }
 
 

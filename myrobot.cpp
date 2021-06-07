@@ -114,27 +114,32 @@ QTcpSocket *MyRobot::getSocket()
 float MyRobot::getBatteryPercent()
 {
     unsigned char adc1=DataReceived[2];
-    unsigned char adc2=DataReceived[4];
-    unsigned char adc3=DataReceived[3];
-    adc1<<adc1;
-    adc2<<adc2;
-    adc3<<adc3;
+//    unsigned char adc2=DataReceived[4];
+//    unsigned char adc3=DataReceived[3];
+//    adc1<<adc1;
+//    adc2<<adc2;
+//    adc3<<adc3;
 
-    unsigned char  adc=adc1+adc2+adc3;
+//    unsigned char  adc=adc1+adc2+adc3;
+
+//    qDebug() <<"battery  level= "<<adc1;
+//    qDebug() <<"battery  level= "<<adc2;
+//    qDebug() <<"battery  level= "<<adc3;
+
+//    qDebug() <<"battery  level= "<<adc;
 
     qDebug() <<"battery  level= "<<adc1;
-    qDebug() <<"battery  level= "<<adc2;
-    qDebug() <<"battery  level= "<<adc3;
-
-    qDebug() <<"battery  level= "<<adc;
-
-
-    return adc/255*100;
+    return adc1;
 }
 
+float MyRobot::getBatteryLevel()
+{
+    return batteryLevel;
+}
+
+/*** Movement robot ***/
 void MyRobot::setForward(int speed)
 {
-    //TODO: set  loopback
     setWheelSpeed( speed);
     DataToSend[6] = (unsigned char)80;      //0xf0;
     updateCrc();
@@ -152,67 +157,15 @@ void MyRobot::setLeft(int speed)
 {
 
     setWheelSpeed( 0,speed);
-    DataToSend[6] = (unsigned char)0;
+    DataToSend[6] = (unsigned char)80;
     updateCrc();
 }
 
 void MyRobot::setRight(int speed)
 {
     setWheelSpeed( speed,0);
-    DataToSend[6] = (unsigned char)0;
+    DataToSend[6] = (unsigned char)80;
     updateCrc();
-}
-
-
-
-void MyRobot::setForward(){
-    short speed1 = 120;
-    short speed2 = 120;
-    DataToSend.resize(9);
-    DataToSend[0] = 0xFF;
-    DataToSend[1] = 0x07;
-    DataToSend[2] = (unsigned char) speed1;
-    DataToSend[3] = (unsigned char)(speed1 >> 8);
-    DataToSend[4] = (unsigned char) speed2;
-    DataToSend[5] = (unsigned char)(speed2 >> 8);
-    DataToSend[6] = (unsigned char)(80);
-    short mycrcsend = Crc16((unsigned char *)DataToSend.data()+1,6);
-    DataToSend[7] = (unsigned char) mycrcsend;
-    DataToSend[8] = (unsigned char) (mycrcsend >> 8);
-
-    //connect(TimerEnvoi, SIGNAL(timeout()), this, SLOT(MyTimerSlot()));
-    updated();
-}
-
-
-void MyRobot::connected() {
-    qDebug() << "connected..."; // Hey server, tell me about you.
-
-
-}
-
-void MyRobot::disconnected() {
-    qDebug() << "disconnected...";
-}
-
-void MyRobot::bytesWritten(qint64 bytes) {
-    updated();
-    qDebug() << bytes << " bytes written...";
-}
-
-void MyRobot::readyRead() {
-    qDebug() << "reading..."; // read the data from the socket
-    DataReceived = socket->readAll();
-    parseReceivedData();
-    emit updateUI(DataReceived);
-    //qDebug() << DataReceived[0] << DataReceived[1] << DataReceived[2];
-}
-
-void MyRobot::MyTimerSlot() {
-    qDebug() << "Timer...";
-    while(Mutex.tryLock());
-    socket->write(DataToSend);
-    Mutex.unlock();
 }
 
 void MyRobot::updateCrc()
@@ -239,9 +192,39 @@ void MyRobot::setWheelSpeed(short lSpeed, short rSpeed)
     DataToSend[5] = (unsigned char)rSpeed;           //right speed
 }
 
+void MyRobot::connected() {
+    qDebug() << "connected..."; // Hey server, tell me about you.
+}
+
+void MyRobot::disconnected() {
+    qDebug() << "disconnected...";
+}
+
+void MyRobot::bytesWritten(qint64 bytes) {
+    updated();
+    qDebug() << bytes << " bytes written...";
+}
+
+void MyRobot::readyRead() {
+    qDebug() << "reading..."; // read the data from the socket
+    DataReceived = socket->readAll();
+    parseReceivedData();
+    emit updateUI(DataReceived);
+    //qDebug() << DataReceived[0] << DataReceived[1] << DataReceived[2];
+}
+
+void MyRobot::MyTimerSlot() {
+    qDebug() << "Timer...";
+    while(Mutex.tryLock());
+    socket->write(DataToSend);
+    Mutex.unlock();
+}
+
+
+
 void MyRobot::parseReceivedData()
 {
-    getBatteryPercent();
+   batteryLevel= getBatteryPercent();
 }
 
 
