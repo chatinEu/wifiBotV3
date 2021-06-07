@@ -20,6 +20,11 @@ public:
     void on_pushButton_clicked();
     MyRobot robot= MyRobot() ;
 
+
+public slots:
+    void connectionLabelSlot();
+    void updateGUI(QByteArray);
+
 private slots:
 
 
@@ -38,8 +43,5 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
-public slots:
-    void connectionLabelSlot();
-    void updateGUI(QByteArray);
 };
 #endif // MAINWINDOW_H

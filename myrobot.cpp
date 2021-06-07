@@ -59,6 +59,7 @@ void MyRobot::doConnect() {
     }
     TimerEnvoi->start(75);
 
+
 }
 
 void MyRobot::disConnect() {
@@ -149,20 +150,16 @@ void MyRobot::setReverse(int speed)
 
 void MyRobot::setLeft(int speed)
 {
-    // TODO: char 6
-    setWheelSpeed( speed);
-//    DataToSend[6] = (unsigned char)0;
-    DataToSend[4] = (unsigned char)0;
-    DataToSend[5] = (unsigned char)0;
+
+    setWheelSpeed( 0,speed);
+    DataToSend[6] = (unsigned char)0;
     updateCrc();
 }
 
 void MyRobot::setRight(int speed)
 {
-    // TODO: char 6
-    setWheelSpeed( speed);
-    DataToSend[2] = (unsigned char)0;
-    DataToSend[3] = (unsigned char)0;
+    setWheelSpeed( speed,0);
+    DataToSend[6] = (unsigned char)0;
     updateCrc();
 }
 
@@ -208,7 +205,7 @@ void MyRobot::readyRead() {
     DataReceived = socket->readAll();
     parseReceivedData();
     emit updateUI(DataReceived);
-    qDebug() << DataReceived[0] << DataReceived[1] << DataReceived[2];
+    //qDebug() << DataReceived[0] << DataReceived[1] << DataReceived[2];
 }
 
 void MyRobot::MyTimerSlot() {
@@ -232,6 +229,14 @@ void MyRobot::setWheelSpeed(short speed)
     DataToSend[3] = (unsigned char)speed;           //left speed
     DataToSend[4] = (unsigned char)speed;   //0x78; //right speed
     DataToSend[5] = (unsigned char)speed;           //right speed
+}
+
+void MyRobot::setWheelSpeed(short lSpeed, short rSpeed)
+{
+    DataToSend[2] = (unsigned char)lSpeed;   //0x78; //left speed
+    DataToSend[3] = (unsigned char)lSpeed;           //left speed
+    DataToSend[4] = (unsigned char)rSpeed;   //0x78; //right speed
+    DataToSend[5] = (unsigned char)rSpeed;           //right speed
 }
 
 void MyRobot::parseReceivedData()

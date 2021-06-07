@@ -44,6 +44,7 @@ private:
     QTimer *TimerEnvoi;
     void updateCrc();
     void setWheelSpeed(short speed);
+    void setWheelSpeed(short lSpeed,short rSpeed);
     void parseReceivedData(); //useless for now
     unsigned char bitwiseAddition(unsigned char c1,unsigned char c2);
 
