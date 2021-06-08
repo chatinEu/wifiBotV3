@@ -1,33 +1,54 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include "qdebug.h"
+
 #include "iostream"
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-    //this->robot = new MyRobot(this);
+
+
+
+
+
     ui->setupUi(this);
-    //this->connectToRobot();
+    connect(&robot, SIGNAL(updateUI(QByteArray)),this, SLOT(updateGUI(QByteArray)));
+    connect(robot.getSocket(), SIGNAL(connected()),this, SLOT(connectionLabelSlot()));
+    connect(robot.getSocket(), SIGNAL(disconnected()),this, SLOT(disconnectionLabelSlot()));
+    connect(&keyFilter,&KeyBoardFilter::up_arrow,this,&MainWindow::upArrow);
+    ui->progressBar->setRange(0,255);
 }
 
 void MainWindow::init()
 {
     //robot pas crée car appel dans le constructeur
-    QTcpSocket* socket=robot.getSocket();
-    //connect(socket,SIGNAL(connected()),this, SLOT(connectionLabelSlot()));
+    QObject::connect(robot.getSocket(),SIGNAL(connected()),
+            this, SLOT(connectionLabelSlot()));
 
-    connect(&robot,SIGNAL(updateUI(QByteArray)),this,SLOT(updateGUI(QByteArray)));
-    ui->progressBar->setRange(0,100);
+   // connect(&robot,&MyRobot::updateUI,
+    //        this,&MainWindow::updateGUI);
+
+
+
+
+
+
+
 }
 
 void MainWindow::updateGUI(QByteArray arr)
 {
-    std::cout<< "updating ::;;;!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"<<std::endl;
     ui->progressBar->setValue(robot.getBatteryLevel());
+
 }
 
-
+void MainWindow::upArrow()
+{
+    std::cout<<"heyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"<<std::endl;
+    robot.setForward(100);
+}
 
 
 void MainWindow::on_BtnStop_clicked()
@@ -56,9 +77,6 @@ void MainWindow::on_BtnLeft_clicked()
     robot.setLeft(110);
 }
 
-void MainWindow::connectToRobot(){
-    robot.doConnect();
-}
 
 
 void setMainWindow(){
@@ -73,17 +91,32 @@ MainWindow::~MainWindow()
 
 
 
-void MainWindow::on_pushButton_6_clicked()
+void MainWindow::on_BtnConnection_clicked()
 {
-    this->connectToRobot();
+    robot.doConnect();
 }
+
+void MainWindow::on_BtnDisconnection_clicked()
+{
+
+    robot.disConnect();
+}
+
 
 void MainWindow::connectionLabelSlot()
 {
-    std::cout<<"connected";
     this->ui->label->setText("ONLINE");
+
+    disconnect(ui->BtnConnection,SIGNAL(clicked()),this,SLOT(on_BtnDisconnection_clicked()));
+    connect(ui->BtnConnection,SIGNAL(clicked()),this,SLOT(on_BtnConnection_clicked()));
 }
 
+void MainWindow::disconnectionLabelSlot()
+{
+    this->ui->label->setText("OFFLINE");
+    disconnect(ui->BtnConnection,SIGNAL(clicked()),this,SLOT(on_BtnConnection_clicked()));
+    connect(ui->BtnConnection,SIGNAL(clicked()),this,SLOT(on_BtnDisconnection_clicked()));
+}
 
 
 

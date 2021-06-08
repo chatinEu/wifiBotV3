@@ -12,7 +12,7 @@ class MyRobot : public QObject {
     Q_OBJECT
 public:
     MyRobot(QObject *parent = 0);
-    void doConnect();
+    bool doConnect();
     void disConnect();
     QByteArray DataToSend;
     QByteArray DataReceived;

@@ -7,7 +7,7 @@
 MyRobot::MyRobot(QObject *parent) : QObject(parent) {
 
 
-
+    socket = new QTcpSocket(this); // socket creation
 
     DataToSend.resize(9);
     DataToSend[0] = 0xff;
@@ -41,8 +41,8 @@ MyRobot::MyRobot(QObject *parent) : QObject(parent) {
 
 
 
-void MyRobot::doConnect() {
-    socket = new QTcpSocket(this); // socket creation
+bool MyRobot::doConnect() {
+
     connect(socket, SIGNAL(connected()),this, SLOT(connected()));
 
     connect(socket, SIGNAL(disconnected()),this, SLOT(disconnected()));
@@ -55,10 +55,10 @@ void MyRobot::doConnect() {
     // we need to wait...
     if(!socket->waitForConnected(5000)) {
         qDebug() << "Error: " << socket->errorString();
-        return;
+        return false;
     }
     TimerEnvoi->start(75);
-
+    return true;
 
 }
 
@@ -114,21 +114,8 @@ QTcpSocket *MyRobot::getSocket()
 float MyRobot::getBatteryPercent()
 {
     unsigned char adc1=DataReceived[2];
-//    unsigned char adc2=DataReceived[4];
-//    unsigned char adc3=DataReceived[3];
-//    adc1<<adc1;
-//    adc2<<adc2;
-//    adc3<<adc3;
-
-//    unsigned char  adc=adc1+adc2+adc3;
-
-//    qDebug() <<"battery  level= "<<adc1;
-//    qDebug() <<"battery  level= "<<adc2;
-//    qDebug() <<"battery  level= "<<adc3;
-
-//    qDebug() <<"battery  level= "<<adc;
-
     qDebug() <<"battery  level= "<<adc1;
+    batteryLevel=adc1;
     return adc1;
 }
 

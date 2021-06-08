@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "myrobot.h"
+#include "keyboardfilter.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -15,20 +16,18 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    void init();
     void connectToRobot();
     void on_pushButton_clicked();
     MyRobot robot= MyRobot() ;
 
-
 public slots:
     void connectionLabelSlot();
-    void updateGUI(QByteArray);
+    void disconnectionLabelSlot();
+    void updateGUI(QByteArray arr);
+    void upArrow();
 
 private slots:
 
-
-    void on_pushButton_6_clicked();
 
     void on_BtnForward_clicked();
 
@@ -40,8 +39,13 @@ private slots:
 
     void on_BtnStop_clicked();
 
+    void on_BtnConnection_clicked();
+
+    void on_BtnDisconnection_clicked();
+
 private:
     Ui::MainWindow *ui;
+    KeyBoardFilter keyFilter=KeyBoardFilter(this);
 
 };
 #endif // MAINWINDOW_H

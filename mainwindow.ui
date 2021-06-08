@@ -115,7 +115,7 @@
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <widget class="QPushButton" name="pushButton_6">
+      <widget class="QPushButton" name="BtnConnection">
        <property name="enabled">
         <bool>true</bool>
        </property>
