@@ -153,7 +153,7 @@ float MyRobot::getLFIRLevel()
     return LFIR;
 }
 
-/*** Movement robot ***/
+/** Movement robot */
 void MyRobot::setForward(int speed)
 {
     setWheelSpeed( speed);

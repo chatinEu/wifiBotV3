@@ -19,6 +19,11 @@ MainWindow::MainWindow(QWidget *parent)
     connect(robot.getSocket(), SIGNAL(disconnected()),this, SLOT(disconnectionLabelSlot()));
     //connect(&keyFilter,&KeyBoardFilter::up_arrow,this,&MainWindow::upArrow);
     ui->progressBar->setRange(0,255);
+
+    ui->progressIRFrontLeft->setRange(0,255);
+    ui->progressIRFrontRight->setRange(0,255);
+    ui->progressIRBackLeft->setRange(0,255);
+    ui->progressIRBackRight->setRange(0,255);
 }
 
 
@@ -27,6 +32,10 @@ void MainWindow::updateGUI(QByteArray arr)
 {
     qDebug()<<"updating gui";
     ui->progressBar->setValue(robot.getBatteryLevel());
+    ui->progressIRFrontLeft->setValue(robot.getLFIRLevel());
+    ui->progressIRFrontRight->setValue(robot.getRFIRLevel());
+    ui->progressIRBackLeft->setValue(robot.getLBIRLevel());
+    ui->progressIRBackRight->setValue(robot.getRBIRLevel());
 
 }
 
