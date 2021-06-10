@@ -17,7 +17,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(&robot, SIGNAL(updateUI(QByteArray)),this, SLOT(updateGUI(QByteArray)));
     connect(robot.getSocket(), SIGNAL(connected()),this, SLOT(connectionLabelSlot()));
     connect(robot.getSocket(), SIGNAL(disconnected()),this, SLOT(disconnectionLabelSlot()));
-    //connect(&keyFilter,&KeyBoardFilter::up_arrow,this,&MainWindow::upArrow);
     ui->progressBar->setRange(0,255);
 
     ui->progressIRFrontLeft->setRange(0,255);
@@ -38,13 +37,6 @@ void MainWindow::updateGUI(QByteArray arr)
     ui->progressIRBackRight->setValue(robot.getRBIRLevel());
 
 }
-
-void MainWindow::upArrow()
-{
-    std::cout<<"heyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"<<std::endl;
-    robot.setForward(100);
-}
-
 
 void MainWindow::on_BtnStop_clicked()
 {

@@ -26,7 +26,6 @@ public slots:
     void connectionLabelSlot();
     void disconnectionLabelSlot();
     void updateGUI(QByteArray arr);
-    void upArrow();
 
 private slots:
 

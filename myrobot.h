@@ -17,13 +17,15 @@ public:
     QByteArray DataToSend;
     QByteArray DataReceived;
     QMutex Mutex;
-    void updated();
-//    short generateCrc(unsigned char *adresseDataToSend,unsigned char tailleMax);
-    short Crc16(unsigned char *_Adresse_tab, unsigned char Taille_Max);
     QTcpSocket* getSocket();
+
+    void updated();
+    short Crc16(unsigned char *_Adresse_tab, unsigned char Taille_Max);
+
+
+    void  parseIRLevels();
     float parseBatteryLevel();
     float getBatteryLevel();
-    void  parseIRLevels();
     float getLFIRLevel();
     float getLBIRLevel();
     float getRFIRLevel();
@@ -51,8 +53,7 @@ private:
     void updateCrc();
     void setWheelSpeed(short speed);
     void setWheelSpeed(short lSpeed,short rSpeed);
-    void parseReceivedData(); //useless for now
-    unsigned char bitwiseAddition(unsigned char c1,unsigned char c2);
+    void parseReceivedData();
     float batteryLevel;
     float LFIR, LBIR,RFIR,RBIR;
 };
