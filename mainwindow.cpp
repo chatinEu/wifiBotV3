@@ -17,26 +17,11 @@ MainWindow::MainWindow(QWidget *parent)
     connect(&robot, SIGNAL(updateUI(QByteArray)),this, SLOT(updateGUI(QByteArray)));
     connect(robot.getSocket(), SIGNAL(connected()),this, SLOT(connectionLabelSlot()));
     connect(robot.getSocket(), SIGNAL(disconnected()),this, SLOT(disconnectionLabelSlot()));
-    connect(&keyFilter,&KeyBoardFilter::up_arrow,this,&MainWindow::upArrow);
+    //connect(&keyFilter,&KeyBoardFilter::up_arrow,this,&MainWindow::upArrow);
     ui->progressBar->setRange(0,255);
 }
 
-void MainWindow::init()
-{
-    //robot pas crée car appel dans le constructeur
-    QObject::connect(robot.getSocket(),SIGNAL(connected()),
-            this, SLOT(connectionLabelSlot()));
 
-   // connect(&robot,&MyRobot::updateUI,
-    //        this,&MainWindow::updateGUI);
-
-
-
-
-
-
-
-}
 
 void MainWindow::updateGUI(QByteArray arr)
 {
@@ -96,29 +81,46 @@ void MainWindow::on_BtnConnection_clicked()
     robot.doConnect();
 }
 
-void MainWindow::on_BtnDisconnection_clicked()
-{
-
-    robot.disConnect();
-}
-
 
 void MainWindow::connectionLabelSlot()
 {
     this->ui->label->setText("ONLINE");
 
-    disconnect(ui->BtnConnection,SIGNAL(clicked()),this,SLOT(on_BtnDisconnection_clicked()));
-    connect(ui->BtnConnection,SIGNAL(clicked()),this,SLOT(on_BtnConnection_clicked()));
+   // disconnect(ui->BtnConnection,SIGNAL(clicked()),this,SLOT(on_BtnDisconnection_clicked()));
+   // connect(ui->BtnConnection,SIGNAL(clicked()),this,SLOT(on_BtnConnection_clicked()));
 }
 
 void MainWindow::disconnectionLabelSlot()
 {
     this->ui->label->setText("OFFLINE");
-    disconnect(ui->BtnConnection,SIGNAL(clicked()),this,SLOT(on_BtnConnection_clicked()));
-    connect(ui->BtnConnection,SIGNAL(clicked()),this,SLOT(on_BtnDisconnection_clicked()));
+   // disconnect(ui->BtnConnection,SIGNAL(clicked()),this,SLOT(on_BtnConnection_clicked()));
+   // connect(ui->BtnConnection,SIGNAL(clicked()),this,SLOT(on_BtnDisconnection_clicked()));
 }
 
-
+bool MainWindow::event(QEvent *event)
+{
+    bool bol=false;
+    if (event->type() == QEvent::KeyRelease) {
+            QKeyEvent *ke = static_cast<QKeyEvent *>(event);
+            if (ke->key() == Qt::Key_Left) {
+                qDebug()<<"pressed left";
+                robot.setLeft(110);
+            }
+            if (ke->key() == Qt::Key_Right) {
+                qDebug()<<"pressed right";
+                robot.setRight(110);
+            }
+            if (ke->key() == Qt::Key_Down) {
+                qDebug()<<"pressed down";
+                robot.setReverse(110);
+            }
+            if (ke->key() == Qt::Key_Up) {
+                qDebug()<<"pressed up";
+                robot.setForward(110);
+            }
+    }
+    return bol;
+}
 
 
 
