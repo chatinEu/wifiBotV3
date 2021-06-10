@@ -140,6 +140,15 @@ float MyRobot::getRBIRLevel()
 {
     return RBIR;
 }
+
+float MyRobot::getRightOdometer()
+{
+    return ROdo;
+}
+float MyRobot::getLeftOdometer()
+{
+    return LOdo;
+}
 float MyRobot::getRFIRLevel()
 {
     return RFIR;
@@ -242,6 +251,16 @@ void MyRobot::parseReceivedData()
 {
    parseBatteryLevel();
    parseIRLevels();
+   parseOdometersValues();
+}
+
+void MyRobot::parseOdometersValues()
+{
+    LOdo=(((long) DataReceived[8]<<24))+(((long)DataReceived[7]<<16))+
+            (((long)DataReceived[6]<<8))+((long)DataReceived[5]);
+
+    ROdo=(((long) DataReceived[16]<<24))+(((long)DataReceived[15]<<16))+
+            (((long)DataReceived[14]<<8))+((long)DataReceived[13]);
 }
 
 

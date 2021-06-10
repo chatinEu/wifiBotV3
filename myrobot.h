@@ -31,6 +31,9 @@ public:
     float getRFIRLevel();
     float getRBIRLevel();
 
+    float getRightOdometer();
+    float getLeftOdometer();
+
 
 
 signals:
@@ -54,8 +57,10 @@ private:
     void setWheelSpeed(short speed);
     void setWheelSpeed(short lSpeed,short rSpeed);
     void parseReceivedData();
+    void parseOdometersValues();
     float batteryLevel;
     float LFIR, LBIR,RFIR,RBIR;
+    float LOdo,ROdo;
 };
 
 #endif // MYROBOT_H

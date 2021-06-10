@@ -36,6 +36,8 @@ void MainWindow::updateGUI(QByteArray arr)
     ui->progressIRBackLeft->setValue(robot.getLBIRLevel());
     ui->progressIRBackRight->setValue(robot.getRBIRLevel());
 
+    qDebug()<< "r odometer = "<<robot.getRightOdometer();
+
 }
 
 void MainWindow::on_BtnStop_clicked()
