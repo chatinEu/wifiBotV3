@@ -111,7 +111,7 @@ QTcpSocket *MyRobot::getSocket()
 
 
 
-float MyRobot::getBatteryPercent()
+float MyRobot::parseBatteryLevel()
 {
     unsigned char adc1=DataReceived[2];
     qDebug() <<"battery  level= "<<adc1;
@@ -122,6 +122,35 @@ float MyRobot::getBatteryPercent()
 float MyRobot::getBatteryLevel()
 {
     return batteryLevel;
+}
+
+void MyRobot::parseIRLevels()
+{
+    LFIR = DataReceived[3];
+    LBIR = DataReceived[4];
+
+    RFIR = DataReceived[11];
+    RBIR = DataReceived[12];
+}
+
+
+/** Infrared sensors */
+
+float MyRobot::getRBIRLevel()
+{
+    return RBIR;
+}
+float MyRobot::getRFIRLevel()
+{
+    return RFIR;
+}
+float MyRobot::getLBIRLevel()
+{
+    return LBIR;
+}
+float MyRobot::getLFIRLevel()
+{
+    return LFIR;
 }
 
 /*** Movement robot ***/
@@ -211,7 +240,8 @@ void MyRobot::MyTimerSlot() {
 
 void MyRobot::parseReceivedData()
 {
-   batteryLevel= getBatteryPercent();
+   parseBatteryLevel();
+   parseIRLevels();
 }
 
 

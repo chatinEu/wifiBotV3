@@ -25,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 void MainWindow::updateGUI(QByteArray arr)
 {
+    qDebug()<<"updating gui";
     ui->progressBar->setValue(robot.getBatteryLevel());
 
 }

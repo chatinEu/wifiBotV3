@@ -21,8 +21,13 @@ public:
 //    short generateCrc(unsigned char *adresseDataToSend,unsigned char tailleMax);
     short Crc16(unsigned char *_Adresse_tab, unsigned char Taille_Max);
     QTcpSocket* getSocket();
-    float getBatteryPercent();
+    float parseBatteryLevel();
     float getBatteryLevel();
+    void  parseIRLevels();
+    float getLFIRLevel();
+    float getLBIRLevel();
+    float getRFIRLevel();
+    float getRBIRLevel();
 
 
 
@@ -49,7 +54,7 @@ private:
     void parseReceivedData(); //useless for now
     unsigned char bitwiseAddition(unsigned char c1,unsigned char c2);
     float batteryLevel;
-
+    float LFIR, LBIR,RFIR,RBIR;
 };
 
 #endif // MYROBOT_H
