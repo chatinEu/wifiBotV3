@@ -81,12 +81,6 @@ void MainWindow::on_BtnConnection_clicked()
     robot.doConnect();
 }
 
-void MainWindow::on_BtnDisconnection_clicked()
-{
-
-    robot.disConnect();
-}
-
 
 void MainWindow::connectionLabelSlot()
 {
@@ -107,22 +101,24 @@ bool MainWindow::event(QEvent *event)
 {
     bool bol=false;
     if (event->type() == QEvent::KeyRelease) {
-        qDebug()<<"event has been pressed";
             QKeyEvent *ke = static_cast<QKeyEvent *>(event);
             if (ke->key() == Qt::Key_Left) {
+                qDebug()<<"pressed left";
                 robot.setLeft(110);
             }
             if (ke->key() == Qt::Key_Right) {
+                qDebug()<<"pressed right";
                 robot.setRight(110);
             }
             if (ke->key() == Qt::Key_Down) {
+                qDebug()<<"pressed down";
                 robot.setReverse(110);
             }
             if (ke->key() == Qt::Key_Up) {
+                qDebug()<<"pressed up";
                 robot.setForward(110);
             }
     }
-
     return bol;
 }
 

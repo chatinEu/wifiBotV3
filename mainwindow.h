@@ -43,7 +43,6 @@ private slots:
 
     void on_BtnConnection_clicked();
 
-    void on_BtnDisconnection_clicked();
 
 private:
     Ui::MainWindow *ui;
