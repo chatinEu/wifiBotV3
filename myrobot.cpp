@@ -204,17 +204,17 @@ void MyRobot::setWheelSpeed(short speed)
 {
 
     DataToSend[2] = (unsigned char)speed;   //0x78; //left speed
-    DataToSend[3] = (unsigned char)speed;           //left speed
+    DataToSend[3] = (unsigned char)(speed>>8);           //left speed
     DataToSend[4] = (unsigned char)speed;   //0x78; //right speed
-    DataToSend[5] = (unsigned char)speed;           //right speed
+    DataToSend[5] = (unsigned char)(speed>>8);           //right speed
 }
 
 void MyRobot::setWheelSpeed(short lSpeed, short rSpeed)
 {
     DataToSend[2] = (unsigned char)lSpeed;   //0x78; //left speed
-    DataToSend[3] = (unsigned char)lSpeed;           //left speed
+    DataToSend[3] = (unsigned char)(lSpeed>>8);           //left speed
     DataToSend[4] = (unsigned char)rSpeed;   //0x78; //right speed
-    DataToSend[5] = (unsigned char)rSpeed;           //right speed
+    DataToSend[5] = (unsigned char)(rSpeed>>8);           //right speed
 }
 
 void MyRobot::connected() {

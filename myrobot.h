@@ -35,7 +35,6 @@ public:
     float getLeftOdometer();
 
 
-
 signals:
     void updateUI(const QByteArray Data);
 public slots:

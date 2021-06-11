@@ -17,7 +17,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(&robot, SIGNAL(updateUI(QByteArray)),this, SLOT(updateGUI(QByteArray)));
     connect(robot.getSocket(), SIGNAL(connected()),this, SLOT(connectionLabelSlot()));
     connect(robot.getSocket(), SIGNAL(disconnected()),this, SLOT(disconnectionLabelSlot()));
-    ui->progressBar->setRange(0,255);
+
+    this->ui->progressBar->setRange(0,255);
 
     ui->progressIRFrontLeft->setRange(0,255);
     ui->progressIRFrontRight->setRange(0,255);
@@ -30,12 +31,14 @@ MainWindow::MainWindow(QWidget *parent)
 void MainWindow::updateGUI(QByteArray arr)
 {
     qDebug()<<"updating gui";
-    ui->progressBar->setValue(robot.getBatteryLevel());
+
+    ui->progressBar->setValue((int)robot.getBatteryLevel());
     ui->progressIRFrontLeft->setValue(robot.getLFIRLevel());
     ui->progressIRFrontRight->setValue(robot.getRFIRLevel());
     ui->progressIRBackLeft->setValue(robot.getLBIRLevel());
     ui->progressIRBackRight->setValue(robot.getRBIRLevel());
 
+    qDebug()<<"batterie ui "<<ui->progressBar->value();
     qDebug()<< "r odometer = "<<robot.getRightOdometer();
 
 }
@@ -57,6 +60,9 @@ void MainWindow::on_BtnReverse_clicked()
 void MainWindow::on_BtnRight_clicked()
 {
     robot.setRight(110);
+    qDebug()<< "ui batterie "<<ui->progressBar->value();
+    ui->progressBar->setValue(0);
+    qDebug()<< "ui batterie "<<ui->progressBar->value();
 }
 
 
@@ -101,6 +107,7 @@ void MainWindow::disconnectionLabelSlot()
    // connect(ui->BtnConnection,SIGNAL(clicked()),this,SLOT(on_BtnDisconnection_clicked()));
 }
 
+
 bool MainWindow::event(QEvent *event)
 {
     bool bol=false;
@@ -123,7 +130,8 @@ bool MainWindow::event(QEvent *event)
                 robot.setForward(110);
             }
     }
-    return bol;
+    QWidget::event(event);
+    return false;
 }
 
 

@@ -20,8 +20,7 @@ public:
     void on_pushButton_clicked();
     MyRobot robot= MyRobot() ;
 
-    bool event(QEvent *event);
-
+     bool event(QEvent *event);
 public slots:
     void connectionLabelSlot();
     void disconnectionLabelSlot();
