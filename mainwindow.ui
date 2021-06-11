@@ -191,7 +191,7 @@
         <number>255</number>
        </property>
        <property name="value">
-        <number>80</number>
+        <number>0</number>
        </property>
        <property name="alignment">
         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -218,7 +218,7 @@
        <item>
         <widget class="QProgressBar" name="progressIRFrontRight">
          <property name="value">
-          <number>24</number>
+          <number>0</number>
          </property>
          <property name="alignment">
           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -231,7 +231,7 @@
        <item>
         <widget class="QProgressBar" name="progressIRFrontLeft">
          <property name="value">
-          <number>24</number>
+          <number>0</number>
          </property>
          <property name="alignment">
           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -248,7 +248,7 @@
        <item>
         <widget class="QProgressBar" name="progressIRBackRight">
          <property name="value">
-          <number>24</number>
+          <number>0</number>
          </property>
          <property name="alignment">
           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -261,7 +261,7 @@
        <item>
         <widget class="QProgressBar" name="progressIRBackLeft">
          <property name="value">
-          <number>24</number>
+          <number>0</number>
          </property>
          <property name="alignment">
           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
