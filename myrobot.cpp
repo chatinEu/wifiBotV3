@@ -193,6 +193,14 @@ void MyRobot::setRight(int speed)
     updateCrc();
 }
 
+float MyRobot::getSpeed(){
+    return speed;
+}
+
+
+
+
+
 void MyRobot::updateCrc()
 {
     short crc = Crc16((unsigned char *)DataToSend.data()+1,6);
@@ -261,6 +269,15 @@ void MyRobot::parseOdometersValues()
 
     ROdo=(((long) DataReceived[16]<<24))+(((long)DataReceived[15]<<16))+
             (((long)DataReceived[14]<<8))+((long)DataReceived[13]);
+
+
+    float tickDiff= ROdo- lastOdoTick;
+    speed=tickDiff;
+
+
+
+    lastOdoTick= ROdo;
+
 }
 
 

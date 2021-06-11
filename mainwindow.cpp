@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 
 #include "qdebug.h"
+#include "string"
 
 #include "iostream"
 MainWindow::MainWindow(QWidget *parent)
@@ -10,15 +11,12 @@ MainWindow::MainWindow(QWidget *parent)
 {
 
 
-
-
-
     ui->setupUi(this);
     connect(&robot, SIGNAL(updateUI(QByteArray)),this, SLOT(updateGUI(QByteArray)));
     connect(robot.getSocket(), SIGNAL(connected()),this, SLOT(connectionLabelSlot()));
     connect(robot.getSocket(), SIGNAL(disconnected()),this, SLOT(disconnectionLabelSlot()));
 
-    this->ui->progressBar->setRange(0,255);
+    ui->progressBar->setRange(0,255);
 
     ui->progressIRFrontLeft->setRange(0,255);
     ui->progressIRFrontRight->setRange(0,255);
@@ -38,8 +36,8 @@ void MainWindow::updateGUI(QByteArray arr)
     ui->progressIRBackLeft->setValue(robot.getLBIRLevel());
     ui->progressIRBackRight->setValue(robot.getRBIRLevel());
 
-    qDebug()<<"batterie ui "<<ui->progressBar->value();
-    qDebug()<< "r odometer = "<<robot.getRightOdometer();
+    QString string = QString::number(robot.getSpeed());
+    ui->LabelSpeed->setText(string);
 
 }
 
@@ -48,7 +46,7 @@ void MainWindow::on_BtnStop_clicked()
     robot.setForward(0);
 }
 void MainWindow::on_BtnForward_clicked(){
-    robot.setForward(10);
+    robot.setForward(110);
 }
 
 void MainWindow::on_BtnReverse_clicked()
@@ -60,9 +58,6 @@ void MainWindow::on_BtnReverse_clicked()
 void MainWindow::on_BtnRight_clicked()
 {
     robot.setRight(110);
-    qDebug()<< "ui batterie "<<ui->progressBar->value();
-    ui->progressBar->setValue(0);
-    qDebug()<< "ui batterie "<<ui->progressBar->value();
 }
 
 

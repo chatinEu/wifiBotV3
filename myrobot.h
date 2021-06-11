@@ -33,6 +33,7 @@ public:
 
     float getRightOdometer();
     float getLeftOdometer();
+    float getSpeed();
 
 
 signals:
@@ -60,6 +61,7 @@ private:
     float batteryLevel;
     float LFIR, LBIR,RFIR,RBIR;
     float LOdo,ROdo;
+    float speed,lastOdoTick;
 };
 
 #endif // MYROBOT_H
