@@ -76,9 +76,6 @@ void MyRobot::updated()
         std::cout<<std::hex <<DataToSend[i]<<std::endl;
     }
 
-    /*for(int i=0; i<20;i++){
-        std::cout<< std::hex << DataReceived[i]<<std::endl;
-    }*/
 }
 
 
