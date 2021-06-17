@@ -46,29 +46,15 @@ MyRobot::MyRobot(QObject *parent) : QObject(parent) {
 
 bool MyRobot::doConnect() {
 
-    connect(socket, SIGNAL(connected()),this, SLOT(connected()));
-
-    connect(socket, SIGNAL(disconnected()),this, SLOT(disconnected()));
-    connect(socket, SIGNAL(bytesWritten(qint64)),this, SLOT(bytesWritten(qint64)));
-    connect(socket, SIGNAL(readyRead()),this, SLOT(readyRead()));
-    qDebug() << "connecting..."; // this is not blocking call
-    //socket->connectToHost("LOCALHOST", 15020);
-    socket->connectToHost("192.168.1.11", 15020); // connection to wifibot
-
-    // we need to wait...
-    if(!socket->waitForConnected(5000)) {
-        qDebug() << "Error: " << socket->errorString();
-        return false;
-    }
-    TimerEnvoi->start(75);
-    return true;
-
+    netService.doConnect();
 }
 
-void MyRobot::disConnect() {
-    TimerEnvoi->stop();
-    socket->close();
+QTcpSocket *MyRobot::getSocket()
+{
+    return netService.getSocket();
 }
+
+
 
 void MyRobot::updated()
 {
@@ -82,32 +68,6 @@ void MyRobot::updated()
 }
 
 
-
-short MyRobot::Crc16(unsigned char *_Adresse_tab, unsigned char Taille_Max){
-    unsigned int Crc = 0xFFFF;
-    unsigned int Polynome = 0xA001;
-    unsigned int CptOctet = 0;
-    unsigned int CptBit = 0;
-    unsigned int Parity = 0;
-
-    Crc = 0xFFFF;
-    Polynome = 0xA001;
-    for (CptOctet=0; CptOctet<Taille_Max;CptOctet++){
-        Crc ^= *(_Adresse_tab + CptOctet);
-
-        for(CptBit=0;CptBit<=7;CptBit++){
-            Parity = Crc;
-            Crc >>=1;
-            if(Parity%2 == true) Crc ^= Polynome;
-        }
-    }
-    return (Crc);
-}
-
-QTcpSocket *MyRobot::getSocket()
-{
-    return socket;
-}
 
 
 
@@ -165,96 +125,43 @@ float MyRobot::getLFIRLevel()
     return LFIR;
 }
 
-/** Movement robot */
+
+
 void MyRobot::setForward(int speed)
 {
-    setWheelSpeed( speed);
-    DataToSend[6] = (unsigned char)80;      //0xf0;
-    updateCrc();
+    netService.setForward(speed);
 
 }
 
 void MyRobot::setReverse(int speed)
 {
-    setWheelSpeed( speed);
-    DataToSend[6] = (unsigned char)0;
-    updateCrc();
+    netService.setReverse(speed);
 }
 
 void MyRobot::setLeft(int speed)
 {
 
-    setWheelSpeed( 0,speed);
-    DataToSend[6] = (unsigned char)80;
-    updateCrc();
+    netService.setLeft(speed);
 }
 
 void MyRobot::setRight(int speed)
 {
-    setWheelSpeed( speed,0);
-    DataToSend[6] = (unsigned char)80;
-    updateCrc();
+    netService.setRight(speed);
 }
 
 float MyRobot::getSpeed(){
     return speed;
 }
 
-
-
-
-
-void MyRobot::updateCrc()
-{
-    short crc = Crc16((unsigned char *)DataToSend.data()+1,6);
-    DataToSend[7] = (unsigned char)(crc >> 0);
-    DataToSend[8] = (unsigned char)(crc >> 8);
-}
-
-void MyRobot::setWheelSpeed(short speed)
+NetworkService MyRobot::getNetService()
 {
 
-    DataToSend[2] = (unsigned char)speed;   //0x78; //left speed
-    DataToSend[3] = (unsigned char)(speed>>8);           //left speed
-    DataToSend[4] = (unsigned char)speed;   //0x78; //right speed
-    DataToSend[5] = (unsigned char)(speed>>8);           //right speed
 }
 
-void MyRobot::setWheelSpeed(short lSpeed, short rSpeed)
-{
-    DataToSend[2] = (unsigned char)lSpeed;   //0x78; //left speed
-    DataToSend[3] = (unsigned char)(lSpeed>>8);           //left speed
-    DataToSend[4] = (unsigned char)rSpeed;   //0x78; //right speed
-    DataToSend[5] = (unsigned char)(rSpeed>>8);           //right speed
-}
 
-void MyRobot::connected() {
-    qDebug() << "connected..."; // Hey server, tell me about you.
-}
 
-void MyRobot::disconnected() {
-    qDebug() << "disconnected...";
-}
 
-void MyRobot::bytesWritten(qint64 bytes) {
-    updated();
-    qDebug() << bytes << " bytes written...";
-}
 
-void MyRobot::readyRead() {
-    qDebug() << "reading..."; // read the data from the socket
-    DataReceived = socket->readAll();
-    parseReceivedData();
-    emit updateUI(DataReceived);
-    //qDebug() << DataReceived[0] << DataReceived[1] << DataReceived[2];
-}
-
-void MyRobot::MyTimerSlot() {
-    qDebug() << "Timer...";
-    while(Mutex.tryLock());
-    socket->write(DataToSend);
-    Mutex.unlock();
-}
 
 
 
@@ -267,11 +174,9 @@ void MyRobot::parseReceivedData()
 
 void MyRobot::parseOdometersValues()
 {
-    LOdo=(((long) DataReceived[8]<<24))+(((long)DataReceived[7]<<16))+
-            (((long)DataReceived[6]<<8))+((long)DataReceived[5]);
-
-    ROdo=(((long) DataReceived[16]<<24))+(((long)DataReceived[15]<<16))+
-            (((long)DataReceived[14]<<8))+((long)DataReceived[13]);
+    float* odometers=netService.parseOdometersValues();
+    LOdo= *odometers;
+    ROdo= *(odometers+1);
 
     int timerTimeout = 75; //ms
     timerTimeout = timerTimeout * 10^-3;

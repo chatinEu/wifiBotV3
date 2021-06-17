@@ -7,6 +7,8 @@
 #include <QDebug>
 #include <QTimer>
 #include <QMutex>
+#include "networkservice.h"
+
 
 class MyRobot : public QObject {
     Q_OBJECT
@@ -35,6 +37,8 @@ public:
     float getLeftOdometer();
     float getSpeed();
 
+    NetworkService getNetService();
+
 
 signals:
     void updateUI(const QByteArray Data);
@@ -51,6 +55,7 @@ public slots:
     void MyTimerSlot();
 
 private:
+    NetworkService netService;
     QTcpSocket *socket;
     QTimer *TimerEnvoi;
     void updateCrc();
