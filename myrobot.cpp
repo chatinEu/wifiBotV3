@@ -4,9 +4,12 @@
 #include <iostream>
 #include <mainwindow.h>
 
+#define _USE_MATH_DEFINES
+#include "math.h"
+
 MyRobot::MyRobot(QObject *parent) : QObject(parent) {
 
-
+    int timerTimeout = 75;
     socket = new QTcpSocket(this); // socket creation
 
     DataToSend.resize(9);
@@ -270,12 +273,14 @@ void MyRobot::parseOdometersValues()
     ROdo=(((long) DataReceived[16]<<24))+(((long)DataReceived[15]<<16))+
             (((long)DataReceived[14]<<8))+((long)DataReceived[13]);
 
-
+    int timerTimeout = 75; //ms
+    timerTimeout = timerTimeout * 10^-3;
     float tickDiff= ROdo- lastOdoTick;
-    speed=tickDiff;
-
-
-
+    float rotorRotation=abs( tickDiff);
+    float tailleRoues= 0.2; //en metres => 20cm
+    float perimetre = 2* M_PI*tailleRoues;
+    float distance = rotorRotation *perimetre;
+    speed = distance/timerTimeout;
     lastOdoTick= ROdo;
 
 }
