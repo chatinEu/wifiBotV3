@@ -295,7 +295,7 @@
      <item>
       <widget class="QLabel" name="label_4">
        <property name="text">
-        <string>L.Y</string>
+        <string>m/s</string>
        </property>
       </widget>
      </item>

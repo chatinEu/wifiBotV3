@@ -91,6 +91,8 @@ void MainWindow::connectionLabelSlot()
 {
     this->ui->label->setText("ONLINE");
 
+    this->ui->BtnConnection->setDisabled(true);
+
    // disconnect(ui->BtnConnection,SIGNAL(clicked()),this,SLOT(on_BtnDisconnection_clicked()));
    // connect(ui->BtnConnection,SIGNAL(clicked()),this,SLOT(on_BtnConnection_clicked()));
 }
@@ -98,6 +100,8 @@ void MainWindow::connectionLabelSlot()
 void MainWindow::disconnectionLabelSlot()
 {
     this->ui->label->setText("OFFLINE");
+
+    this->ui->BtnConnection->setDisabled(false);
    // disconnect(ui->BtnConnection,SIGNAL(clicked()),this,SLOT(on_BtnConnection_clicked()));
    // connect(ui->BtnConnection,SIGNAL(clicked()),this,SLOT(on_BtnDisconnection_clicked()));
 }

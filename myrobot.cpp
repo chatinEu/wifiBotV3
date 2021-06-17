@@ -53,7 +53,7 @@ bool MyRobot::doConnect() {
     connect(socket, SIGNAL(readyRead()),this, SLOT(readyRead()));
     qDebug() << "connecting..."; // this is not blocking call
     //socket->connectToHost("LOCALHOST", 15020);
-    socket->connectToHost("192.168.1.11", 15020); // connection to wifibot
+    socket->connectToHost("192.168.1.106", 15020); // connection to wifibot
 
     // we need to wait...
     if(!socket->waitForConnected(5000)) {
@@ -275,12 +275,14 @@ void MyRobot::parseOdometersValues()
 
     int timerTimeout = 75; //ms
     timerTimeout = timerTimeout * 10^-3;
+
     float tickDiff= ROdo- lastOdoTick;
     float rotorRotation=abs( tickDiff);
+    qDebug()<<"raw data= "<<tickDiff << " abs data "<< rotorRotation;
     float tailleRoues= 0.2; //en metres => 20cm
     float perimetre = 2* M_PI*tailleRoues;
     float distance = rotorRotation *perimetre;
-    speed = distance/timerTimeout;
+    speed = abs(distance/timerTimeout);
     lastOdoTick= ROdo;
 
 }
