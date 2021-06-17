@@ -16,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(robot.getSocket(), SIGNAL(connected()),this, SLOT(connectionLabelSlot()));
     connect(robot.getSocket(), SIGNAL(disconnected()),this, SLOT(disconnectionLabelSlot()));
 
-    ui->progressBar->setRange(0,255);
+    ui->progressBar->setRange(0,180);
 
     ui->progressIRFrontLeft->setRange(0,255);
     ui->progressIRFrontRight->setRange(0,255);
@@ -38,7 +38,6 @@ void MainWindow::updateGUI(QByteArray arr)
 
     QString string = QString::number(robot.getSpeed());
     ui->LabelSpeed->setText(string);
-
 }
 
 void MainWindow::on_BtnStop_clicked()
